@@ -23,6 +23,9 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int yourcall(void);
+int customfork(void);
+int yourproc(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
