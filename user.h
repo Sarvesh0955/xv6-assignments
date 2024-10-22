@@ -26,6 +26,8 @@ int uptime(void);
 int yourcall(void);
 int customfork(void);
 int yourproc(void);
+int cps(void);
+int chpr(int pid,int priority);
 
 // ulib.c
 int stat(const char*, struct stat*);

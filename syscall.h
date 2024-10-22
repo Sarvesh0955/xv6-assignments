@@ -23,3 +23,5 @@
 #define SYS_yourcall 22
 #define SYS_customfork 23
 #define SYS_yourproc 24
+#define SYS_cps 25
+#define SYS_chpr 26
