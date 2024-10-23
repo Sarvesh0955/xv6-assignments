@@ -120,6 +120,10 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
+/*----------xv6 sync lab----------*/
+void ucv_sleep(int, int);
+int waitpid(int);
+/*----------xv6 sync lab end----------*/
 
 // swtch.S
 void            swtch(struct context**, struct context*);
