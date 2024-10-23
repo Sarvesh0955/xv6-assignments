@@ -103,9 +103,23 @@ extern int sys_unlink(void);
 extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
-extern int sys_yourcall(void);
-extern int sys_customfork(void);
-extern int sys_yourproc(void);
+/*----------xv6 sync lab----------*/
+extern int sys_ucounter_init(void);
+extern int sys_ucounter_get(void);
+extern int sys_ucounter_set(void);
+extern int sys_uspinlock_init(void);
+extern int sys_uspinlock_acquire(void);
+extern int sys_uspinlock_release(void);
+extern int sys_ucv_sleep(void);
+extern int sys_ucv_wakeup(void);
+extern int sys_barrier_init(void);
+extern int sys_barrier_check(void);
+extern int sys_waitpid(void);
+extern int sys_sem_init(void);
+extern int sys_sem_up(void);
+extern int sys_sem_down(void);
+
+/*----------xv6 sync lab end----------*/
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -129,9 +143,22 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
-[SYS_yourcall]   sys_yourcall,
-[SYS_customfork]   sys_customfork,
-[SYS_yourproc]   sys_yourproc,
+/*----------xv6 sync lab----------*/
+[SYS_ucounter_init]         sys_ucounter_init,
+[SYS_ucounter_get]          sys_ucounter_get,
+[SYS_ucounter_set]          sys_ucounter_set,
+[SYS_uspinlock_init]        sys_uspinlock_init,
+[SYS_uspinlock_acquire]     sys_uspinlock_acquire,
+[SYS_uspinlock_release]     sys_uspinlock_release,
+[SYS_ucv_sleep]             sys_ucv_sleep,
+[SYS_ucv_wakeup]            sys_ucv_wakeup,
+[SYS_barrier_init]            sys_barrier_init,
+[SYS_barrier_check]            sys_barrier_check,
+[SYS_waitpid]            sys_waitpid,
+[SYS_sem_init]            sys_sem_init,
+[SYS_sem_up]            sys_sem_up,
+[SYS_sem_down]            sys_sem_down,
+/*----------xv6 sync lab end----------*/
 };
 
 void

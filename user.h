@@ -23,9 +23,25 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int yourcall(void);
-int customfork(void);
-int yourproc(void);
+
+/*----------xv6 sync lab----------*/
+int ucounter_init(void);
+int ucounter_get(int);
+int ucounter_set(int, int);
+int uspinlock_init(void);
+int uspinlock_acquire(int);
+int uspinlock_release(int);
+int ucv_sleep(int, int);
+int ucv_wakeup(int);
+int barrier_init(int);
+int barrier_check(void);
+int waitpid(int);
+int sem_init(int, int);
+int sem_up(int);
+int sem_down(int);
+
+
+/*----------xv6 sync lab end----------*/
 
 // ulib.c
 int stat(const char*, struct stat*);
