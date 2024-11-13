@@ -4,18 +4,16 @@
 
 #define BUFFER_SIZE 100
 
-// Helper function to read an integer from the user
 int read_int() {
     char buffer[BUFFER_SIZE];
     int n = read(0, buffer, BUFFER_SIZE);
-    buffer[n - 1] = '\0'; // Replace newline character with null terminator
+    buffer[n - 1] = '\0'; 
     return atoi(buffer);
 }
 
-// Helper function to read a string from the user
 void read_string(char *str) {
     int n = read(0, str, BUFFER_SIZE);
-    str[n - 1] = '\0'; // Replace newline character with null terminator
+    str[n - 1] = '\0'; 
 }
 
 int main() {
@@ -23,7 +21,7 @@ int main() {
     printf(1, "Enter number of processes: ");
     n = read_int();
 
-    char q[n][20]; // Array to store process names (max length 19 chars)
+    char q[n][20]; 
     printf(1, "Processes: ");
     for(int i = 0; i < n; i++) {
         read_string(q[i]);
