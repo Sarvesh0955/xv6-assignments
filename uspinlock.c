@@ -3,36 +3,52 @@
 #include "x86.h"
 #include "uspinlock.h"
 
-//TODO: define an array of NLOCK uspinlocks
+#define NLOCK 10
+struct uspinlock {
+  uint locked; // 0 if free, 1 if locked
+  char *name;  // Name of lock for debugging
+};
+
+struct uspinlock uspinlocks[NLOCK]; // Array of spinlocks
 
 int
 uspinlock_init(void)
 {
-  // Initialize all locks to unlocked state
-  // To be done.
+  for (int i = 0; i < NLOCK; i++) {
+    uspinlocks[i].locked = 0; // All locks are initially free
+    uspinlocks[i].name = "uspinlock";
+  }
   return 0;
 }
 
 int
 uspinlock_acquire(int index)
 {
-  // To be done.
+  if (index < 0 || index >= NLOCK)
+    return -1;
+
+  // Spin until the lock is acquired
+  while (xchg(&uspinlocks[index].locked, 1) != 0)
+    ;
+
   return 0;
 }
 
 int
 uspinlock_release(int index)
 {
-  // To be done.
+  if (index < 0 || index >= NLOCK)
+    return -1;
+
+  uspinlocks[index].locked = 0;  // Release lock
   return 0;
 }
 
 int
 uspinlock_holding(int index)
 {
-  // To be done.
-  //Return 0 if lock is free, 1 if lock is held
-  
-  return 0;
+  if (index < 0 || index >= NLOCK)
+    return -1;
+
+  return uspinlocks[index].locked != 0;
 }
-/*----------xv6 sync lock end----------*/
