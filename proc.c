@@ -540,13 +540,49 @@ procdump(void)
 void
 ucv_sleep(int variable, int index)
 {
-  //TODO
+  acquire(&ptable.lock);  // Acquire the process table lock for safety.
 
+  while (variable == 0) { // Wait until the variable is non-zero.
+    // Set the process to sleep on this condition variable and index.
+    sleep(&variable, &ptable.lock);
+  }
+
+  release(&ptable.lock); // Release the process table lock when done.
 }
 
-int waitpid(int pid)
+int
+waitpid(int pid)
 {
-  //TODO
-  return 0;
+  struct proc *p;
+  int have_kids, pid_found = -1;
+
+  acquire(&ptable.lock);
+
+  for (;;) {
+    have_kids = 0;
+    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+      if (p->parent != myproc() || p->pid != pid)
+        continue;
+      
+      have_kids = 1;
+      if (p->state == ZOMBIE) {
+        pid_found = p->pid;
+        // Clean up the process table entry for the zombie process.
+        kfree(p->kstack);
+        p->kstack = 0;
+        p->state = UNUSED;
+        release(&ptable.lock);
+        return pid_found;
+      }
+    }
+
+    if (!have_kids || myproc()->killed) {
+      release(&ptable.lock);
+      return -1;
+    }
+
+    sleep(myproc(), &ptable.lock);
+  }
 }
+
 /*----------xv6 sync lab end----------*/
