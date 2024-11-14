@@ -2,62 +2,82 @@
 #include "stat.h"
 #include "user.h"
 
-// Modified function for xv6 to avoid user input
-int main() {
-    // Matrix for storing Process Id, Burst Time, Average Waiting Time & Average Turn Around Time.
-    int A[100][4];
-    int i, j, n = 4, total = 0, index, temp;
-    float avg_wt, avg_tat;
+#define MAX_PROCESSES 10
 
-    // Hardcoded Burst Times for the processes
-    int burstTimes[4] = {6, 8, 7, 3}; // Example burst times
+struct Process {
+    char id[5];
+    int at;      // Arrival time
+    int bt;      // Burst time
+    int ct;      // Completion time
+    int wt;      // Waiting time
+    int tat;     // Turnaround time
+    int rem;     // Remaining time
+};
 
-    // Setting process ids and burst times
-    for (i = 0; i < n; i++) {
-        A[i][0] = i + 1;    // Process ID
-        A[i][1] = burstTimes[i]; // Burst Time
+// Round Robin scheduling function with Gantt Chart
+void roundRobin(struct Process ps[], int n, int q) {
+    int t = 0, done = 0;
+    double totalWt = 0, totalTat = 0;
+
+    // Initialize remaining time and completion time
+    for (int i = 0; i < n; i++) {
+        ps[i].rem = ps[i].bt;
+        ps[i].ct = 0;
     }
 
-    // Sorting processes according to their Burst Time
-    for (i = 0; i < n; i++) {
-        index = i;
-        for (j = i + 1; j < n; j++) {
-            if (A[j][1] < A[index][1]) {
-                index = j;
+    // Display Gantt Chart Header
+    printf(1, "\nGantt Chart:\n");
+
+    // Round Robin Scheduling with Gantt Chart
+    while (done < n) {
+        int idle = 1;
+
+        for (int i = 0; i < n; i++) {
+            if (ps[i].rem > 0 && ps[i].at <= t) {
+                idle = 0;
+                int slice = (q < ps[i].rem) ? q : ps[i].rem;
+                printf(1, "| %s ", ps[i].id);  // Display process in Gantt Chart
+                t += slice;
+                ps[i].rem -= slice;
+
+                if (ps[i].rem == 0) {  // Process completed
+                    ps[i].ct = t;             // Completion time
+                    ps[i].tat = ps[i].ct - ps[i].at; // Turnaround time
+                    ps[i].wt = ps[i].tat - ps[i].bt; // Waiting time
+                    totalWt += ps[i].wt;
+                    totalTat += ps[i].tat;
+                    done++;
+                }
             }
         }
-        temp = A[i][1];
-        A[i][1] = A[index][1];
-        A[index][1] = temp;
-
-        temp = A[i][0];
-        A[i][0] = A[index][0];
-        A[index][0] = temp;
-    }
-
-    // Calculate Waiting Time for each process
-    A[0][2] = 0;
-    for (i = 1; i < n; i++) {
-        A[i][2] = 0;
-        for (j = 0; j < i; j++) {
-            A[i][2] += A[j][1];
+        if (idle) {
+            printf(1, "| idle ");
+            t++;
         }
-        total += A[i][2];
     }
-    avg_wt = (float)total / n;
-    total = 0;
+    printf(1, "|\n");  // End Gantt Chart
 
-    // Calculate Turnaround Time and print the results
-    printf(1, "P\tBT\tWT\tTAT\n");
-    for (i = 0; i < n; i++) {
-        A[i][3] = A[i][1] + A[i][2];
-        total += A[i][3];
-        printf(1, "P%d\t%d\t%d\t%d\n", A[i][0], A[i][1], A[i][2], A[i][3]);
+    // Display Results
+    printf(1, "\nID\tAT\tBT\tCT\tWT\tTAT\n");
+    for (int i = 0; i < n; i++) {
+        printf(1, "%s\t%d\t%d\t%d\t%d\t%d\n", ps[i].id, ps[i].at, ps[i].bt, ps[i].ct, ps[i].wt, ps[i].tat);
     }
-    avg_tat = (float)total / n;
 
-    printf(1, "Average Waiting Time= %d.%d\n", (int)avg_wt, (int)((avg_wt - (int)avg_wt) * 100));
-    printf(1, "Average Turnaround Time= %d.%d\n", (int)avg_tat, (int)((avg_tat - (int)avg_tat) * 100));
+    printf(1, "\nAverage WT: %d\n", (int)(totalWt / n));
+    printf(1, "Average TAT: %d\n", (int)(totalTat / n));
+}
 
+int main() {
+    // Hardcoded input values
+    int n = 3;  // Number of processes
+    struct Process ps[MAX_PROCESSES] = {
+        {"P1", 0, 10, 0, 0, 0, 0},
+        {"P2", 2, 5, 0, 0, 0, 0},
+        {"P3", 4, 8, 0, 0, 0, 0}
+    };
+    int q = 3;  // Time quantum
+
+    // Execute Round Robin scheduling
+    roundRobin(ps, n, q);
     exit();
 }
