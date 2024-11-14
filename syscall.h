@@ -21,5 +21,3 @@
 #define SYS_mkdir  20
 #define SYS_close  21
 #define SYS_yourcall 22
-#define SYS_customfork 23
-#define SYS_yourproc 24

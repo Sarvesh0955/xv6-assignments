@@ -4,6 +4,6 @@
 
 int main(void)
 {
-    printf(1,"Note: Sholay was released in year %d\n", yourcall());
+    printf(1,"My DOB is %d\n", yourcall());
     exit();
 }

@@ -7,8 +7,6 @@
 #include "mmu.h"
 #include "proc.h"
 
-extern int customfork(void);
-
 int
 sys_fork(void)
 {
@@ -95,17 +93,5 @@ sys_uptime(void)
 int
 sys_yourcall(void)
 {
-  return 199;
-}
-
-int 
-sys_customfork(void)
-{
-  return customfork();
-}
-
-int
-sys_yourproc(void)
-{
-  return customfork();
+  return 2005;
 }
