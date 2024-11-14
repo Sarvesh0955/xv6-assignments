@@ -88,7 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p->priority = 10;
+  p->burst = 1;
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -346,7 +346,7 @@ scheduler(void)
       for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
         if(p1->state != RUNNABLE)
           continue;
-        if(highP->priority > p1->priority)   //larger value, lower priority
+        if(highP->burst > p1->burst)   //larger value, lower priority
           highP = p1;
       }
       p = highP;
@@ -594,27 +594,27 @@ cps()
 struct proc *p;
 sti();
 acquire(&ptable.lock);
-cprintf("name \t pid \t state \t priority \n");
+cprintf("name \t pid \t state \t burst \n");
 for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
   if(p->state == SLEEPING)
-	  cprintf("%s \t %d \t SLEEPING \t %d \n ", p->name,p->pid,p->priority);
+	  cprintf("%s \t %d \t SLEEPING \t %d \n ", p->name,p->pid,p->burst);
 	else if(p->state == RUNNING)
- 	  cprintf("%s \t %d \t RUNNING \t %d \n ", p->name,p->pid,p->priority);
+ 	  cprintf("%s \t %d \t RUNNING \t %d \n ", p->name,p->pid,p->burst);
 	else if(p->state == RUNNABLE)
- 	  cprintf("%s \t %d \t RUNNABLE \t %d \n ", p->name,p->pid,p->priority);
+ 	  cprintf("%s \t %d \t RUNNABLE \t %d \n ", p->name,p->pid,p->burst);
 }
 release(&ptable.lock);
 return 22;
 }
 
 int 
-chpr(int pid, int priority)
+chpr(int pid, int burst)
 {
 	struct proc *p;
 	acquire(&ptable.lock);
 	for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
 	  if(p->pid == pid){
-			p->priority = priority;
+			p->burst = burst;
 			break;
 		}
 	}

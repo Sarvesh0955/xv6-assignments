@@ -181,11 +181,7 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
-	_test_yourcall\
-	_test_yourproc\
 	_ps\
-	_nice\
-	_dpro\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -259,8 +255,6 @@ EXTRA=\
 	test_yourcall.c\
 	test_yourproc.c\
 	ps.c\
-	dpro.c\
-	nice.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 

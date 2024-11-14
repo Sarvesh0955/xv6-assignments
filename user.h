@@ -27,7 +27,7 @@ int yourcall(void);
 int customfork(void);
 int yourproc(void);
 int cps(void);
-int chpr(int pid,int priority);
+int chpr(int pid,int burst);
 
 // ulib.c
 int stat(const char*, struct stat*);
